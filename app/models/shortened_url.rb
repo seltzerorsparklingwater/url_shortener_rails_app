@@ -19,6 +19,18 @@ class ShortenedUrl < ApplicationRecord
         foreign_key: :submitter_id,
         class_name: :User
 
+    has_many :visits,
+        primary_key: :id,
+        foreign_key: :shortened_url_id,
+        class_name: :Visit,
+        dependent: :destroy
+
+    # may uncomment the lambda below to eliminate duplicates in the result set.
+    has_many :visitors,
+        # -> { distinct },
+        through: :visits,
+        source: :visitor
+
     #factory method must be called on the ShortenedUrl class not the instance
     #e.g. ShortenedUrl.self.create_for_user_and_long_url(User.first, "www.yolo.com")
     def self.create_for_user_and_long_url!(user, long_url)
