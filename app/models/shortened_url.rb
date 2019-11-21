@@ -14,16 +14,13 @@ class ShortenedUrl < ApplicationRecord
     validates :long_url, :short_url, :submitter, presence: true
     validates :short_url, uniqueness: true
 
-    belongs_to :submitters,
+    belongs_to :submitter,
         primary_key: :id,
         foreign_key: :submitter_id,
         class_name: :User
 
-
-
-
-
-
+    #factory method must be called on the ShortenedUrl class not the instance
+    #e.g. ShortenedUrl.self.create_for_user_and_long_url(User.first, "www.yolo.com")
     def self.create_for_user_and_long_url!(user, long_url)
         ShortenedUrl.create!(
             submitter_id: user.id,
