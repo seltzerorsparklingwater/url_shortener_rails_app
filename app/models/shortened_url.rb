@@ -25,9 +25,9 @@ class ShortenedUrl < ApplicationRecord
         class_name: :Visit,
         dependent: :destroy
 
-    # may uncomment the lambda below to eliminate duplicates in the result set.
+    # may uncomment the proc below to eliminate duplicates in the result set.
     has_many :visitors,
-        # -> { distinct },
+        Proc.new { distinct },
         through: :visits,
         source: :visitor
 
@@ -47,6 +47,22 @@ class ShortenedUrl < ApplicationRecord
             random_code = SecureRandom.urlsafe_base64(16)
             return random_code unless ShortenedUrl.exists?(short_url: random_code)
         end
+    end
+
+    def num_clicks
+        visits.count
+    end
+
+    def num_uniques
+        visits.select('user_id').distinct.count
+    end
+
+    def num_recent_uniques
+        visits
+            .select('user_id')
+            .where('created_at > ?', 10.minutes.ago)
+            .distinct
+            .count
     end
 
 end

@@ -22,9 +22,9 @@ class User < ApplicationRecord
         foreign_key: :user_id,
         class_name: :Visit
 
-    # To de-duplicate the results, uncomment the lambda below.
+    # To de-duplicate the results, uncomment the proc below.
     has_many :visited_urls,
-        # -> { distinct },
+        Proc.new { distinct },
         through: :visits,
         source: :shortened_url
     
