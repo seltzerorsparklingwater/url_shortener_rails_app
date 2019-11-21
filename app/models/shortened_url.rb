@@ -29,6 +29,7 @@ class ShortenedUrl < ApplicationRecord
         )
     end
 
+    #helper method; not intended to be called alone
     def self.random_code
         loop do
             random_code = SecureRandom.urlsafe_base64(16)
